@@ -13,37 +13,24 @@ limitedColumns = [
 ]
 
 
-# OK
-def getManufacturerNames(pdData):
-    return sorted(list(pd.Series(pdData["manufacturer"]).unique()))
+def getAllManufacturers():
+    return pd.Series(getRawData()["manufacturer"]).unique()
 
 
-# OK
-def getManufacturerLabels(pdData):
-    return [x.title() for x in getManufacturerNames(pdData)]
+def getLimitedData(cols = None, lowerBound = None):
+    if not cols:
+        cols = limitedColumns
+        
+    pdData = getRawData()[cols]
+
+    if lowerBound:
+        (manufacturers, _) = getManufacturerCount(pdData, lowerBound)
+        pdData = pdData[pdData["manufacturer"].isin(manufacturers)]
+
+    return pdData
 
 
-# OK
-def mapManufacturerId(pdData):
-    return {x: i for (i, x) in enumerate(getManufacturerNames(pdData))}
-
-
-# OK
-def getManufacturerIds(pdData):
-    return sorted(mapManufacturerId(pdData).values())
-
-# OK
-def getRawData():
-    data_file = "aux/datasets/automobile.csv"
-
-    return pd.read_csv(data_file)
-
-
-def getManufacturerData(manufacturer, pdData):
-    return pdData[(pdData["manufacturer"] == manufacturer)]
-
-
-def getManufacturerCount(pdData, lower_bound = 0):
+def getManufacturerCount(pdData, lowerBound = 0):
     counts = []
     manufacturers = []
 
@@ -51,24 +38,41 @@ def getManufacturerCount(pdData, lower_bound = 0):
         data = getManufacturerData(manufacturer, pdData)
         count = len(data.index)
 
-        if count >= lower_bound:
+        if count >= lowerBound:
             manufacturers.append(manufacturer)
             counts.append(count)
 
     return(manufacturers, list(zip(manufacturers, counts)))
 
 
-def getLimitedData(cols = None, lower_bound = None):
-    if not cols:
-        cols = limitedColumns
-        
-    data = getRawData()[cols]
+def getManufacturerData(manufacturer, pdData):
+    return pdData[(pdData["manufacturer"] == manufacturer)]
 
-    if lower_bound:
-        (manufacturers, _) = getManufacturerCount(data, lower_bound)
-        data = data[data["manufacturer"].isin(manufacturers)]
 
-    return data
+def getManufacturerIds(pdData):
+    return sorted(mapManufacturerId(pdData).values())
+
+
+def getManufacturerLabels(pdData):
+    return [x.title() for x in getManufacturerNames(pdData)]
+
+
+def getManufacturerNames(pdData):
+    return sorted(list(pd.Series(pdData["manufacturer"]).unique()))
+
+
+def getNumericData(pdData):
+    return pdData.replace({"manufacturer": mapManufacturerId(pdData)})
+
+
+def getRawData():
+    data_file = "aux/datasets/automobile.csv"
+
+    return pd.read_csv(data_file)
+
+
+def mapManufacturerId(pdData):
+    return {x: i for (i, x) in enumerate(getManufacturerNames(pdData))}
 
 
 def normalizeColumn(colName, pdData, inverted = False):
@@ -87,11 +91,4 @@ def normalizeColumns(colNames, pdData):
 def normalizeColumnsInverted(colNames, pdData):
     for colName in colNames:
         normalizeColumn(colName, pdData, inverted = True)
-
-
-def getAllManufacturers():
-    return pd.Series(getRawData()["manufacturer"]).unique()
-
-
-def getNumericData(pdData):
-    return pdData.replace({"manufacturer": mapManufacturerId(pdData)})
+        

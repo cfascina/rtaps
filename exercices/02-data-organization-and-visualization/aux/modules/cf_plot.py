@@ -52,7 +52,7 @@ def inverseLossesByManufacturer(figure, gridSpec = None, pdData = None, axes = N
         axes.set_yticklabels([])
 
     if legend:
-        axes.legend([barMins, barMeans, barMaxs], ["Min", "Mean", "Max"], loc = 2)
+        axes.legend([barMaxs, barMeans, barMins], ["Max", "Mean", "Min"], loc = 2)
     
     if gridSpec:
         gridSpec.tight_layout(figure)
@@ -97,7 +97,7 @@ def inverseRiskinessAndLossesCombinedByManufacturer(figure, gridSpec = None, pdD
         axes.set_xlabel("Manufacturer", fontsize = 16)
     
     axes.set_ylabel("Inverse Riskiness", fontsize = 16)
-    axes.legend([barMins, barMeans, barMaxs], ["Min", "Mean", "Max"], loc = 2)
+    axes.legend([barMaxs, barMeans, barMins], ["Max", "Mean", "Min"], loc = 2)
     
     if gridSpec:
         gridSpec.tight_layout(figure)
@@ -135,7 +135,7 @@ def inverseRiskinessByManufacturer(figure, gridSpec = None, pdData = None, axes 
         axes.set_yticklabels([])
 
     if legend:
-        axes.legend([barMins, barMeans, barMaxs], ["Min", "Mean", "Max"], loc = 2)
+        axes.legend([barMaxs, barMeans, barMins], ["Max", "Mean", "Min"], loc = 2)
     
     if gridSpec:
         gridSpec.tight_layout(figure)
@@ -171,15 +171,16 @@ def priceByManufacturer(figure, gridSpec = None, pdData = None, axes = None):
     if not axes:
         axes = figure.add_subplot(gridSpec[0, 0])
 
+    manufacturerIds = cf_data.getManufacturerIds(pdData)
+    
     minData  = pdData.groupby("manufacturer", sort = True)["price"].min()
     meanData = pdData.groupby("manufacturer", sort = True)["price"].mean()
     maxData  = pdData.groupby("manufacturer", sort = True)["price"].max()
-    make_ids = cf_data.getManufacturerIds(pdData)
 
     axes.set_title("Price by Manufacturers", fontsize = 20)
-    axes.plot(make_ids, minData,  c = colors[2], linewidth = 4, alpha = 0.7)
-    axes.plot(make_ids, meanData, c = colors[3], linewidth = 4, alpha = 0.7)
-    axes.plot(make_ids, maxData,  c = colors[4], linewidth = 4, alpha = 0.7)
+    axes.plot(manufacturerIds, minData,  c = colors[2], linewidth = 4, alpha = 0.7)
+    axes.plot(manufacturerIds, meanData, c = colors[3], linewidth = 4, alpha = 0.7)
+    axes.plot(manufacturerIds, maxData,  c = colors[4], linewidth = 4, alpha = 0.7)
     axes.set_xticks(range(-1, 13))
     axes.set_xticklabels([" "] + cf_data.getManufacturerLabels(pdData))
     axes.set_xlabel("Manufacturer", fontsize = 16)
@@ -188,6 +189,7 @@ def priceByManufacturer(figure, gridSpec = None, pdData = None, axes = None):
     patchLow =  mpl.patches.Patch(color = colors[2], alpha = 0.7, label = "Low")
     patchMean = mpl.patches.Patch(color = colors[3], alpha = 0.7, label = "Mean")
     patchHigh = mpl.patches.Patch(color = colors[4], alpha = 0.7, label = "High")
+
     axes.legend(handles = [patchHigh, patchMean, patchLow], loc = 2)
     
     if gridSpec:
@@ -196,76 +198,78 @@ def priceByManufacturer(figure, gridSpec = None, pdData = None, axes = None):
     return axes
 
 
-##################################################
-
-
-
-def getManufacturerAutoRadarPlot(
+def radarByManufacturer(
     figure, 
-    gs = None, 
-    pddata = None, 
-    title_axes = None, 
-    legend_axes = None, 
-    inner_axes = None, 
-    geometry = None, rotate=True):
+    gridSpec = None, 
+    pdData = None, 
+    titleAxes = None, 
+    legendAxes = None, 
+    innerAxes = None, 
+    geometry = None, 
+    rotate = True):
     
-    radar_colors = [1, 2, 0]
-    min_data = pddata.groupby("manufacturer", sort=True).min()
-    max_data = pddata.groupby("manufacturer", sort=True).max()
-    mean_data = pddata.groupby("manufacturer", sort=True).mean()
-    projection = cf_radar.RadarAxes(spoke_count=len(mean_data.columns))
+    radarColors = [0, 1, 2]
+
+    dataMin  = pdData.groupby("manufacturer", sort = True).min()
+    dataMean = pdData.groupby("manufacturer", sort = True).mean()
+    dataMax  = pdData.groupby("manufacturer", sort = True).max()
+    
+    projection = cf_radar.RadarAxes(spokeCount = len(dataMean.columns))
     
     if geometry:
-        (row_num, col_num) = geometry
+        (rowNum, colNum) = geometry
     else:
-        (row_num, col_num) = gs.get_geometry()
+        (rowNum, colNum) = gridSpec.get_geometry()
     
-    if not inner_axes:
-        subplots = [x for x in gs]
-        inner_axes = []
+    if not innerAxes:
+        subplots = [x for x in gridSpec]
+        innerAxes = []
 
-        for(i, m) in enumerate(subplots[col_num:]):
-            if i % col_num != 0:
-                inner_axes.append(plt.subplot(m, projection = projection))
+        for(i, m) in enumerate(subplots[colNum:]):
+            if i % colNum != 0:
+                innerAxes.append(plt.subplot(m, projection = projection))
     
-    if not title_axes:
-        title_axes = figure.add_subplot(gs[0, :])
+    if not titleAxes:
+        titleAxes = figure.add_subplot(gridSpec[0, :])
     
-    if legend_axes is None:
-        legend_axes = figure.add_subplot(gs[0:, 0])
+    if legendAxes is None:
+        legendAxes = figure.add_subplot(gridSpec[0:, 0])
     
-    if legend_axes != False:
-        max_patch = mpl.patches.Patch(color = colors[radar_colors[0]], alpha = 0.7, label = "Max")
-        mean_patch = mpl.patches.Patch(color = colors[radar_colors[1]], alpha = 0.7, label = "Mean")
-        min_patch = mpl.patches.Patch(color = colors[radar_colors[2]], alpha = 0.7, label="Min")
-        legend_axes.legend(handles=[max_patch, mean_patch, min_patch], loc = 10)
-        hideAxes(legend_axes)
+    if legendAxes != False:
+        patchMin  = mpl.patches.Patch(color = colors[radarColors[2]], alpha = 0.7, label = "Min")
+        patchMean = mpl.patches.Patch(color = colors[radarColors[1]], alpha = 0.7, label = "Mean")
+        patchMax  = mpl.patches.Patch(color = colors[radarColors[0]], alpha = 0.7, label = "Max")
+        legendAxes.legend(handles=[patchMax, patchMean, patchMin], loc = 10)
+        hideAxes(legendAxes)
     
-    title_axes.set_title("Plot Radar with 7 Dimensions for 12 Manufacturers", fontsize = 16)
-    hideAxes(title_axes)
+    titleAxes.set_title("Radar - 7 Dimensions for 12 Manufacturers", fontsize = 20)
+    hideAxes(titleAxes)
     
-    for i, manufacturer in enumerate(manufacturer.getManufacturerNames(pddata)):
-        axes = inner_axes[i]
+    for i, manufacturer in enumerate(cf_data.getManufacturerNames(pdData)):
+        axes = innerAxes[i]
         axes.set_title(
             manufacturer.title(), 
             size = 'large', 
-            position=(0.5, 1.2), 
+            position = (0.5, 1.3), 
             horizontalalignment = 'center', 
             verticalalignment = 'center')
         
-        for(color, alpha, data) in zip(radar_colors, [0.2, 0.3, 0.4], [max_data, mean_data, min_data]):
+        for(color, alpha, data) in zip(radarColors, [0.2, 0.3, 0.4], [dataMax, dataMean, dataMin]):
             axes.fill(
                 axes.radar_theta,
                 data.loc[manufacturer], 
                 color = colors[color], 
                 alpha = alpha)
             
-            axes.plot(axes.radar_theta, data.loc[manufacturer], color=colors[color])
+            axes.plot(axes.radar_theta, data.loc[manufacturer], color = colors[color])
         
-        axes.set_varlabels([x.replace(" ", "\n") for x in mean_data.columns])
+        axes.setVarLabels([x.replace(" ", "\n") for x in dataMean.columns])
         axes.set_yticklabels([])
+        axes.patch.set_facecolor('#CDCED1')
+        axes.patch.set_alpha(0.5)
+        
     
-    if gs:
-        gs.tight_layout(figure)
+    if gridSpec:
+        gridSpec.tight_layout(figure)
     
-    return [title_axes, legend_axes, inner_axes]
+    return [titleAxes, legendAxes, innerAxes]

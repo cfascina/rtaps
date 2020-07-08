@@ -1,27 +1,25 @@
-lines.color: 4e5d6c
-patch.edgecolor: 4e5d6c
+lines.color: 4E5D6C
+patch.edgecolor: 4E5D6C
 
-text.color: cdced1
+text.color: CDCED1
 
-axes.facecolor: 2b3e50
-axes.edgecolor: 4e5d6c
-axes.labelcolor: ff812d
+axes.facecolor: 2B3E50
+axes.edgecolor: 4E5D6C
+axes.labelcolor: FF812D
 
-### SET COLORS CHANGES axes.prop_cycle
-#axes.color_cycle: df691b, 5cb85c, 5bc0de, f0ad4e, d9534f, 4e5d6c
 axes.prop_cycle : cycler('color', ['b', 'g', 'r', 'c', 'm', 'y', 'k'])
 axes.axisbelow: True
 
-xtick.color: 8c949d
-ytick.color: 8c949d
+xtick.color: 8C949D
+ytick.color: 8C949D
 
-grid.color: 4e5d6c
+grid.color: 4E5D6C
 
-figure.facecolor: 2b3e50
-figure.edgecolor: 2b3e50
+figure.facecolor: 2B3E50
+figure.edgecolor: 2B3E50
 
-savefig.facecolor: 2b3e50
-savefig.edgecolor: 2b3e50
+savefig.facecolor: 2B3E50
+savefig.edgecolor: 2B3E50
 
 legend.fancybox: True
 legend.shadow: True
