@@ -22,9 +22,12 @@ def hideAxes(axes):
     [n.set_visible(False) for n in axes.get_xticklines() + axes.get_yticklines()]
 
 
-def inverseLossesByManufacturer(figure, gridSpec = None, pdData = None, axes = None, legend = True, labels = True):
+def inverseLossesByManufacturer(figure, gridSpec = None, pdData = None, axes = None, legend = True, labels = True, rotateTicks = False):
     if not axes:
         axes = figure.add_subplot(gridSpec[0, 0])
+
+    if rotateTicks:
+        plt.xticks(rotation = 70)
     
     manufacturerIds = cf_data.getManufacturerIds(pdData)
     
@@ -40,7 +43,7 @@ def inverseLossesByManufacturer(figure, gridSpec = None, pdData = None, axes = N
     barMeans = axes.bar(manufacturerIds, lossMeans, width = 0.5, align = "center", color = meanColor, alpha = 0.7, bottom = lossMins)
     barMaxs  = axes.bar(manufacturerIds, lossMaxs,  width = 0.5, align = "center", color = maxColor,  alpha = 0.7, bottom = lossMeans + lossMins)
     
-    axes.set_title("Inverse Losses by Manufacturers - Normalized Data", fontsize = 20)
+    axes.set_title("Inverse Losses by Manufacturers\n(Normalized Data)", fontsize = 20)
 
     if labels:
         axes.set_xticks(range(0, 13))
@@ -89,7 +92,7 @@ def inverseRiskinessAndLossesCombinedByManufacturer(figure, gridSpec = None, pdD
     barMeans = axes.bar(manufacturerIds, means, align = "center", color = meanColor, alpha = 0.7, bottom = mins)
     barMaxs  = axes.bar(manufacturerIds, maxs,  align = "center", color = maxColor,  alpha = 0.7, bottom = means + mins)
     
-    axes.set_title("Inverse Riskiness and Losses Combined by Manufacturers - Normalized Data", fontsize = 20)
+    axes.set_title("Inverse Riskiness and Losses Combined by Manufacturers\n(Normalized Data)", fontsize = 20)
     axes.set_xticks(range(0, 13))
     axes.set_xticklabels(cf_data.getManufacturerLabels(pdData))
 
@@ -105,9 +108,12 @@ def inverseRiskinessAndLossesCombinedByManufacturer(figure, gridSpec = None, pdD
     return axes
 
 
-def inverseRiskinessByManufacturer(figure, gridSpec = None, pdData = None, axes = None, legend = True, labels = True):
+def inverseRiskinessByManufacturer(figure, gridSpec = None, pdData = None, axes = None, legend = True, labels = True, rotateTicks = False):
     if not axes:
         axes = figure.add_subplot(gridSpec[0, 0])
+
+    if rotateTicks:
+        plt.xticks(rotation = 70)
     
     manufacturerIds = cf_data.getManufacturerIds(pdData)
 
@@ -123,7 +129,7 @@ def inverseRiskinessByManufacturer(figure, gridSpec = None, pdData = None, axes 
     barMeans = axes.bar(manufacturerIds, riskMeans, width = 0.5, align = "center", color = meanColor, alpha = 0.7, bottom = riskMins)
     barMaxs  = axes.bar(manufacturerIds, riskMaxs,  width = 0.5, align = "center", color = maxColor,  alpha = 0.7, bottom = riskMeans + riskMins)
     
-    axes.set_title(("Inverse Riskiness by Manufacturers - Normalized Data"), fontsize = 20)
+    axes.set_title(("Inverse Riskiness by Manufacturers\n(Normalized Data)"), fontsize = 20)
 
     if labels:
         axes.set_xticks(range(0, 13))
