@@ -1,0 +1,27 @@
+lines.color: 4E5D6C
+patch.edgecolor: 4E5D6C
+
+text.color: CDCED1
+
+axes.facecolor: 2B3E50
+axes.edgecolor: 4E5D6C
+axes.labelcolor: FF812D
+
+axes.prop_cycle : cycler('color', ['b', 'g', 'r', 'c', 'm', 'y', 'k'])
+axes.axisbelow: True
+
+xtick.color: 8C949D
+ytick.color: 8C949D
+
+grid.color: 4E5D6C
+
+figure.facecolor: 2B3E50
+figure.edgecolor: 2B3E50
+
+savefig.facecolor: 2B3E50
+savefig.edgecolor: 2B3E50
+
+legend.fancybox: True
+legend.shadow: True
+legend.frameon: True
+legend.framealpha: 0.6
