@@ -1,0 +1,5 @@
+{ "name": "Gilmar Rezende", "gender": "M", "id_dep": "1", "age": "42", "salary": "5100" }
+{ "name": "Matias Tavares", "gender": "M", "id_dep": "2", "age": "50", "salary": "8500" }
+{ "name": "Paulo Miranda", "gender": "M", "id_dep": "1", "age": "36", "salary": "9700" }
+{ "name": "Ana Paula Soares", "gender": "F", "id_dep": "1", "age": "41", "salary": "9500" }
+{ "name": "Carolina Maia", "gender": "F", "id_dep": "2", "age": "34", "salary": "6500" }
