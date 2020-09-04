@@ -1,0 +1,5 @@
+ { "nome": "Gilmar Rezende", "sexo": "m", "deptid": "1000", "idade": "42", "salario": "5000" }
+ { "nome": "Matias Tavares", "sexo": "m", "deptid": "2000", "idade": "50", "salario": "8500" }
+ { "nome": "Paulo Miranda", "sexo": "m", "deptid": "1000", "idade": "36", "salario": "9700" }
+ { "nome": "Ana Paula Soares", "sexo": "f", "deptid": "1000", "idade": "41", "salario": "9500" }
+ { "nome": "Carolina Maia", "sexo": "m", "deptid": "2000", "idade": "34", "salario": "6500" }
