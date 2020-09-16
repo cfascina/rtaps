@@ -1,4 +1,8 @@
+# Configuration Folders
 .ipynb_checkpoints/
 *__pycache__*
 *.pyc
+
+# Individual Files
 sentiment-analysis.csv
+dataset_analise_sentimento.zip
