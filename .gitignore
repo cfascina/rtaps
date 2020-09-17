@@ -1,3 +1,9 @@
+# Configuration Folders
 .ipynb_checkpoints/
 *__pycache__*
 *.pyc
+
+# Individual Files
+dataset_analise_sentimento.zip
+sentiment-analysis.csv
+twitter-access.txt
