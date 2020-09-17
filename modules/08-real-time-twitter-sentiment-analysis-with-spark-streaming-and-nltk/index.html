@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Real Time Sentiment Analysis - Donald Trump</title>
+	<style type="text/css">
+		h1,
+		h3,
+		.graph {
+			text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Real Time Twitter Sentiment Analysis</h1>
+	<h3>For the word "Trump"</h3>
+
+	<div class="graph"></div>
+
+	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script type="text/javascript">
+		// Chart Width and Height
+		var width = 800;
+		var height = 500;
+		var pad = 50;
+
+		// SVG Object
+		var svg = d3.select("div.graph")
+			.append("svg")
+			.attr("width", width)
+			.attr("height", height);
+
+		// X and Y scales
+		var xScale = d3.scale.linear().domain([0, 15]).range([pad, width - 2 * pad]);
+		var yScale = d3.scale.linear().domain([100, 0]).range([pad, height - pad]);
+
+		console.log(pad);
+		var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickFormat(function (d) {
+			return xScale.tickFormat(4, d3.format(",d"))(d)
+		}).ticks(3);
+		var yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+		// X and Y map for its scalesMapeamento de x e y para suas respectivas escalas		
+		var xMap = function (d) { return xScale(d); }
+		var yMap = function (d) { return yScale(d); }
+
+		// X axis
+		svg.append("g")
+			.attr("class", "axis")
+			.attr("transform", "translate(0, " + (height - pad) + ")")
+			.call(xAxis);
+
+		// Y axis
+		svg.append("g")
+			.attr("class", "axis")
+			.attr("transform", "translate(" + pad + ", 0)")
+			.call(yAxis);
+
+		var getPercentage = function (d) {
+			return d[2] / d[3] * 100;
+		}
+
+		// Data
+		var sentiments = [
+			// ['id', 'sentiment', 'n_tweets_sentiment', 'n_tweets_total']
+
+			// Positive (1)
+			[0, 1, 114, 501],
+			[1, 1, 95, 501],
+			[2, 1, 103, 501],
+			[3, 1, 99, 501],
+			[4, 1, 96, 501],
+			[5, 1, 83, 501],
+			[6, 1, 111, 501],
+			[7, 1, 97, 501],
+			[8, 1, 106, 501],
+			[9, 1, 105, 501],
+			[10, 1, 107, 501],
+			[11, 1, 93, 501],
+			[12, 1, 83, 501],
+			[13, 1, 93, 501],
+			[14, 1, 101, 501],
+
+			// Negative (0)
+			[0, 0, 387, 501],
+			[1, 0, 406, 501],
+			[2, 0, 398, 501],
+			[3, 0, 402, 501],
+			[4, 0, 405, 501],
+			[5, 0, 418, 501],
+			[6, 0, 390, 501],
+			[7, 0, 404, 501],
+			[8, 0, 395, 501],
+			[9, 0, 396, 501],
+			[10, 0, 394, 501],
+			[11, 0, 408, 501],
+			[12, 0, 418, 501],
+			[13, 0, 408, 501],
+			[14, 0, 400, 501]
+		];
+
+		// Adding Data
+		svg.selectAll("circle")
+			.data(sentiments)
+			.enter()
+			.append("circle")
+			.attr("r", 7)
+
+			// Getting X and Y coordinates
+			.attr("cx", function (d) { return xMap(d[0]); })
+			.attr("cy", function (d) { return yMap(getPercentage(d)); })
+
+			// Setting Colors
+			.style("fill", function (d) {
+				return d[1] == 1 ? "green" : "red";
+			})
+			.attr("stroke", "gray")
+
+			// MouseOver Opacity
+			.on("mouseover", function (d) {
+				d3.select(this).style("opacity", .25);
+			})
+			.on("mouseout", function (d) {
+				d3.select(this).style("opacity", 1);
+			})
+
+			// Title
+			.append("title")
+			.text(function (d) {
+				type = d[1] == 1 ? "Positive" : "Negative";
+
+				return type + " (" + d[2] + " tweets)";
+			});
+
+		// X Label
+		svg.append("text")
+			.attr("class", "x label")
+			.attr("text-anchor", "start")
+			.attr("x", pad)
+			.attr("y", height - 6)
+			.text("Time Interval (5 seconds)");
+
+		// Y Label
+		svg.append("text")
+			.attr("class", "y label")
+			.attr("text-anchor", "start")
+			.attr("x", pad - 5)
+			.attr("y", pad - 10)
+			.text("Percentage");
+
+		// Positive Sentiments Data
+		var sentimentsPositive = [
+			[0, 1, 114, 501],
+			[1, 1, 95, 501],
+			[2, 1, 103, 501],
+			[3, 1, 99, 501],
+			[4, 1, 96, 501],
+			[5, 1, 83, 501],
+			[6, 1, 111, 501],
+			[7, 1, 97, 501],
+			[8, 1, 106, 501],
+			[9, 1, 105, 501],
+			[10, 1, 107, 501],
+			[11, 1, 93, 501],
+			[12, 1, 83, 501],
+			[13, 1, 93, 501],
+			[14, 1, 101, 501]
+		];
+
+		// Negative Sentiments Data
+		var sentimentsNegative = [
+			[0, 0, 387, 501],
+			[1, 0, 406, 501],
+			[2, 0, 398, 501],
+			[3, 0, 402, 501],
+			[4, 0, 405, 501],
+			[5, 0, 418, 501],
+			[6, 0, 390, 501],
+			[7, 0, 404, 501],
+			[8, 0, 395, 501],
+			[9, 0, 396, 501],
+			[10, 0, 394, 501],
+			[11, 0, 408, 501],
+			[12, 0, 418, 501],
+			[13, 0, 408, 501],
+			[14, 0, 400, 501]
+		];
+
+		// Lines
+		var lineFunction = d3.svg.line()
+			.x(function (d) { return xMap(d[0]); })
+			.y(function (d) { return yMap(getPercentage(d)); })
+			.interpolate("linear");
+
+		svg.append("path")
+			.attr("d", function (d) {
+				return lineFunction(sentimentsPositive);
+			})
+			.attr("stroke", "green")
+			.attr("stroke-width", 1)
+			.attr("fill", "none");
+
+		var lineFunction = d3.svg.line()
+			.x(function (d) { return xMap(d[0]); })
+			.y(function (d) { return yMap(getPercentage(d)); })
+			.interpolate("linear");
+
+		svg.append("path")
+			.attr("d", function (d) {
+				return lineFunction(sentimentsNegative);
+			})
+			.attr("stroke", "red")
+			.attr("stroke-width", 1)
+			.attr("fill", "none");
+	</script>
+</body>
+
+</html>
